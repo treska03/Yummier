@@ -23,7 +23,8 @@ class RecipeController(
             timeNeeded = recipeCreateDto.timeNeeded,
             difficulty = recipeCreateDto.difficulty,
             category = recipeCreateDto.category,
-            ingredients = recipeCreateDto.ingredients
+            ingredients = recipeCreateDto.ingredients,
+            instruction = recipeCreateDto.instruction
         )
 
         return RecipeDto.from(recipe)

@@ -12,6 +12,7 @@ data class RecipeDto(
     var difficulty: Difficulty,
     var category: Category,
     val ingredients: List<String>,
+    val instruction: List<String>
 ) {
     companion object {
         fun from(recipe: Recipe): RecipeDto {
@@ -21,8 +22,10 @@ data class RecipeDto(
                 recipe.timeNeeded,
                 recipe.difficulty,
                 recipe.category,
-                recipe.ingredients.map { it.name.normalize() }
+                recipe.ingredients.map { it.name.normalize() },
+                recipe.instruction
             )
         }
     }
 }
+
