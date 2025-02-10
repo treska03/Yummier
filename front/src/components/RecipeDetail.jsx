@@ -1,15 +1,29 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { useParams } from 'react-router-dom'
-import { recipeData } from '../data/recipes'
+import recipeService from '../service/recipeService'
+import capitalizeFirstLetter from '../helper/capitalize';
+
+
 
 function RecipeDetail() {
   const { id } = useParams()
-  const recipe = recipeData.find((r) => r.id === parseInt(id))
+  const [recipe, setRecipes] = useState();
+  useEffect(() => {
+    const fetchRecipes = async () => {
+        try {
+          const data = await recipeService.getById(parseInt(id))
+          setRecipes(data);
+        } catch (error) {
+          console.error('Error fetching recipes:', error);
+        }
+      };
+
+      fetchRecipes();
+  }, []);
 
   if (!recipe) {
     return <div>Recipe not found</div>
   }
-
   return (
     <div className="recipe-detail">
       <div className="text-center mb-4">
@@ -17,7 +31,7 @@ function RecipeDetail() {
         <p className="lead">{recipe.description}</p>
         <div className="badge bg-light text-dark me-2">⏱️ {recipe.timeNeeded} min.</div>
         <div className="badge bg-light text-dark">
-          {recipe.difficulty === 'Easy' ? '👶' : '👨‍🍳'} {recipe.difficulty}
+          {recipe.difficulty === 'EASY' ? '👶' : '👨‍🍳'} {capitalizeFirstLetter(recipe.difficulty.toLowerCase())} 
         </div>
       </div>
       

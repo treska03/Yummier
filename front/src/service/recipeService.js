@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_URL = '/api/v1';
 
 
 const recipeService = {
@@ -50,6 +50,22 @@ const recipeService = {
             throw error;
         }
     },
+
+    // Get recipe by ID
+    getById: async (id) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/${id}`, {
+                method: 'GET',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to get recipe');
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Error getting recipe:', error);
+            throw error;
+        }
+    }
 };
 
 export default recipeService;
