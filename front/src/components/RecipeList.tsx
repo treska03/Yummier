@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
-import { recipeData, deleteRecipe } from '../data/recipes'
 import recipeService from '../service/recipeService'
-
+import capitalizeFirstLetter from '../helper/capitalize'
 
 
 interface Recipe {
@@ -13,19 +12,29 @@ interface Recipe {
   difficulty: string;
   category: string;
   ingredients: string[];
-  instruction: string[];
+  instructions: string[];
+}
+
+interface RecipePage {
+  content: Recipe[];
+  totalPages: number,
+    totalElements: number,
+    last: boolean,
+    size: number,
+    number: number,
+    sort: {
+        sorted: boolean,
+        empty: boolean,
+        unsorted: boolean
+    },
+    numberOfElements: number,
+    first: boolean,
+    empty: boolean
 }
 
 
-
 const RecipeList = () => {
-  const handleDeleteWithoutApi = (id) => {
-    if (window.confirm('Are you sure you want to delete this recipe?')) {
-      deleteRecipe(id)
-    }
-  }
-
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [recipes, setRecipes] = useState<RecipePage>();
   useEffect(() => {
       const fetchRecipes = async () => {
           try {
@@ -54,16 +63,12 @@ const RecipeList = () => {
     <div>
       <h2 className="mb-4 text-center">Our Favorite Recipes</h2>
       <div className="row">
-        {/* Change recipes below to recipesData if u want to see mocked recipers from data/recipes.js file
-            Its only implemented to see some recipes if the backend is not running
-        */}
-        {recipeData.map((recipe) => (
+        {recipes?.content.map((recipe) => (
           <div key={recipe.id} className="col-md-4 mb-4">
             <div className="card h-100">
               <div className="card-body d-flex flex-column">
               <button
                     className="delete-button"
-                    // onClick={() => handleDeleteWithoutApi(recipe.id)}
                     onClick={() => handleDelete(recipe.id)}
                   >
                     ✕
@@ -75,7 +80,7 @@ const RecipeList = () => {
                     <small className="text-muted">
                       ⏱️ {recipe.timeNeeded} min. • 
                       <span className="ms-2">
-                        {recipe.difficulty === 'Easy' ? '👶' : '👨‍🍳'} {recipe.difficulty}
+                        {recipe.difficulty === 'EASY' ? '👶' : '👨‍🍳'} {capitalizeFirstLetter(recipe.difficulty.toLowerCase())}
                       </span>
                     </small>
                   </p>
@@ -94,6 +99,5 @@ const RecipeList = () => {
     </div>
   )
 }
-
 
 export default RecipeList

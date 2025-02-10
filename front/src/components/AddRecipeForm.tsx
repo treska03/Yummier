@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { addRecipe } from '../data/recipes'
 import recipeService from '../service/recipeService'
 
 
@@ -10,7 +9,8 @@ function AddRecipe() {
     title: '',
     description: '',
     timeNeeded: '',
-    difficulty: 'Easy',
+    difficulty: 'EASY',
+    category: 'BREAKFAST',
     ingredients: [''],
     instructions: ['']
   })
@@ -47,16 +47,16 @@ function AddRecipe() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+        recipe.difficulty = recipe.difficulty.toUpperCase();
+        recipe.category = recipe.category.toUpperCase();
+
         const addedRecipe = await recipeService.addRecipe(recipe);
         console.log('Recipe added:', addedRecipe);
-        // addRecipe(recipe)
         navigate('/recipes')
         console.log('Recipe added', recipe )
     } catch (error) {
         console.error('Error adding recipe:', error);
     }
-    
-    
   }
 
   return (
@@ -111,6 +111,20 @@ function AddRecipe() {
               <option>Easy</option>
               <option>Medium</option>
               <option>Hard</option>
+            </select>
+          </div>
+          <div className="col">
+            <label className="form-label">Category</label>
+            <select
+              className="form-control"
+              name="category"
+              value={recipe.category}
+              onChange={handleChange}
+            >
+              <option>Breakfast</option>
+              <option>Lunch</option>
+              <option>Snack</option>
+              <option>Dinner</option>
             </select>
           </div>
         </div>
