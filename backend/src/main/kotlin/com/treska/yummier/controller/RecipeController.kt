@@ -1,8 +1,14 @@
 package com.treska.yummier.controller
 
 import com.treska.yummier.dto.RecipeDto
+import com.treska.yummier.dto.RecipeFilter
+import com.treska.yummier.model.Recipe
 import com.treska.yummier.service.RecipeService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.*
+
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -11,8 +17,11 @@ class RecipeController(
 ) {
 
     @GetMapping
-    fun retrieveAll(): List<RecipeDto> {
-        return recipeService.getAll().map { RecipeDto.from(it) }
+    fun getRecipes(
+        @ModelAttribute filter: RecipeFilter?,
+        @PageableDefault(size = 10, sort = ["id"]) pageable: Pageable
+    ): Page<Recipe> {
+        return recipeService.get(filter ?: RecipeFilter(), pageable)
     }
 
     @PostMapping
