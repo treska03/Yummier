@@ -57,7 +57,7 @@ const RecipeList = () => {
         {/* Change recipes below to recipesData if u want to see mocked recipers from data/recipes.js file
             Its only implemented to see some recipes if the backend is not running
         */}
-        {recipes.map((recipe) => (
+        {recipeData.map((recipe) => (
           <div key={recipe.id} className="col-md-4 mb-4">
             <div className="card h-100">
               <div className="card-body d-flex flex-column">
