@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.*
 class RecipeController(
     private val recipeService: RecipeService
 ) {
+    @GetMapping("/{id}")
+    fun getRecipe(@PathVariable id: Long): Recipe {
+        return recipeService.getById(id)
+    }
 
     @GetMapping
     fun getRecipes(
@@ -33,7 +37,7 @@ class RecipeController(
             difficulty = recipeCreateDto.difficulty,
             category = recipeCreateDto.category,
             ingredients = recipeCreateDto.ingredients,
-            instruction = recipeCreateDto.instruction
+            instructions = recipeCreateDto.instructions
         )
 
         return RecipeDto.from(recipe)

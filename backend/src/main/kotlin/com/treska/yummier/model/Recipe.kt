@@ -1,5 +1,7 @@
 package com.treska.yummier.model
 
+import com.treska.yummier.dto.Category
+import com.treska.yummier.dto.Difficulty
 import jakarta.persistence.*
 
 
@@ -12,14 +14,6 @@ data class Recipe(
     val timeNeeded: Int = 0,
     val difficulty: Difficulty = Difficulty.MEDIUM,
     val category: Category = Category.BREAKFAST,
-    @ManyToMany val ingredients: List<Ingredient> = listOf(),
-    @ElementCollection val instruction: List<String> = listOf()
+    @ElementCollection val ingredients: List<String> = listOf(),
+    @ElementCollection val instructions: List<String> = listOf()
 )
-
-enum class Difficulty {
-    EASY, MEDIUM, HARD
-}
-
-enum class Category {
-    BREAKFAST, LUNCH, DINNER, SNACK
-}

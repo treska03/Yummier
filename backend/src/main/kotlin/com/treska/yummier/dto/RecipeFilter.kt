@@ -1,8 +1,5 @@
 package com.treska.yummier.dto
 
-import com.treska.yummier.model.Category
-import com.treska.yummier.model.Difficulty
-
 data class RecipeFilter(
     val title: String? = null,
     val description: String? = null,
