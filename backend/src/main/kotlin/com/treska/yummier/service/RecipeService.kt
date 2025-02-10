@@ -1,15 +1,21 @@
 package com.treska.yummier.service
 
+import com.treska.yummier.dto.RecipeFilter
 import com.treska.yummier.extension.normalize
 import com.treska.yummier.model.Category
 import com.treska.yummier.model.Difficulty
 import com.treska.yummier.model.Recipe
 import com.treska.yummier.repository.RecipeRepository
+import com.treska.yummier.repository.SpecificationBuilder
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
 class RecipeService(private val recipeRepository: RecipeRepository, private val ingredientService: IngredientService) {
-    fun getAll(): List<Recipe> = recipeRepository.findAll()
+    fun get(filter: RecipeFilter, pageable: Pageable): Page<Recipe> {
+        return recipeRepository.findAll(SpecificationBuilder.withFilters(filter), pageable)
+    }
 
     fun create(
         title: String,
