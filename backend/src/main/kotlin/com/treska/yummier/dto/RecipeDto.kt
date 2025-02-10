@@ -1,8 +1,5 @@
 package com.treska.yummier.dto
 
-import com.treska.yummier.extension.normalize
-import com.treska.yummier.model.Category
-import com.treska.yummier.model.Difficulty
 import com.treska.yummier.model.Recipe
 
 data class RecipeDto(
@@ -22,10 +19,17 @@ data class RecipeDto(
                 recipe.timeNeeded,
                 recipe.difficulty,
                 recipe.category,
-                recipe.ingredients.map { it.name.normalize() },
+                recipe.ingredients,
                 recipe.instructions
             )
         }
     }
 }
 
+enum class Difficulty {
+    EASY, MEDIUM, HARD
+}
+
+enum class Category {
+    BREAKFAST, LUNCH, DINNER, SNACK
+}

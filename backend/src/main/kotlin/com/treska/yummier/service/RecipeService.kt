@@ -1,10 +1,9 @@
 package com.treska.yummier.service
 
+import com.treska.yummier.dto.Category
+import com.treska.yummier.dto.Difficulty
 import com.treska.yummier.dto.RecipeFilter
 import com.treska.yummier.exception.RecipeNotFoundException
-import com.treska.yummier.extension.normalize
-import com.treska.yummier.model.Category
-import com.treska.yummier.model.Difficulty
 import com.treska.yummier.model.Recipe
 import com.treska.yummier.repository.RecipeRepository
 import com.treska.yummier.repository.SpecificationBuilder
@@ -13,7 +12,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
-class RecipeService(private val recipeRepository: RecipeRepository, private val ingredientService: IngredientService) {
+class RecipeService(private val recipeRepository: RecipeRepository) {
     fun get(filter: RecipeFilter, pageable: Pageable): Page<Recipe> {
         return recipeRepository.findAll(SpecificationBuilder.withFilters(filter), pageable)
     }
@@ -34,8 +33,6 @@ class RecipeService(private val recipeRepository: RecipeRepository, private val 
         ingredients: List<String>,
         instructions: List<String>
     ): Recipe {
-        val ingredients = ingredients.map { name -> ingredientService.createIfNotExists(name.normalize()) }
-
         val recipe = Recipe(
             title = title,
             description = description,
