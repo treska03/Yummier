@@ -32,7 +32,7 @@ class RecipeService(private val recipeRepository: RecipeRepository, private val 
         difficulty: Difficulty,
         category: Category,
         ingredients: List<String>,
-        instruction: List<String>
+        instructions: List<String>
     ): Recipe {
         val ingredients = ingredients.map { name -> ingredientService.createIfNotExists(name.normalize()) }
 
@@ -43,7 +43,7 @@ class RecipeService(private val recipeRepository: RecipeRepository, private val 
             difficulty = difficulty,
             category = category,
             ingredients = ingredients,
-            instruction = instruction
+            instructions = instructions
         )
 
         recipeRepository.save(recipe)

@@ -13,7 +13,7 @@ data class Recipe(
     val difficulty: Difficulty = Difficulty.MEDIUM,
     val category: Category = Category.BREAKFAST,
     @ManyToMany val ingredients: List<Ingredient> = listOf(),
-    @ElementCollection val instruction: List<String> = listOf()
+    @ElementCollection val instructions: List<String> = listOf()
 )
 
 enum class Difficulty {
