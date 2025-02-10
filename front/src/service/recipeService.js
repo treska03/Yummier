@@ -16,6 +16,22 @@ const recipeService = {
         }
     },
 
+    // Get recipe by ID
+    getById: async (id) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/${id}`, {
+                method: 'GET',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to get recipe');
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Error getting recipe:', error);
+            throw error;
+        }
+    },
+
     // Add a new recipe
     addRecipe: async (recipeDto) => {
         try {
@@ -47,22 +63,6 @@ const recipeService = {
             }
         } catch (error) {
             console.error('Error deleting recipe:', error);
-            throw error;
-        }
-    },
-
-    // Get recipe by ID
-    getById: async (id) => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/${id}`, {
-                method: 'GET',
-            });
-            if (!response.ok) {
-                throw new Error('Failed to get recipe');
-            }
-            return response.json();
-        } catch (error) {
-            console.error('Error getting recipe:', error);
             throw error;
         }
     }

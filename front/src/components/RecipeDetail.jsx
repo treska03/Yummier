@@ -4,7 +4,6 @@ import recipeService from '../service/recipeService'
 import capitalizeFirstLetter from '../helper/capitalize';
 
 
-
 function RecipeDetail() {
   const { id } = useParams()
   const [recipe, setRecipes] = useState();

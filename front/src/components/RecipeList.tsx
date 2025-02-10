@@ -33,7 +33,6 @@ interface RecipePage {
 }
 
 
-
 const RecipeList = () => {
   const [recipes, setRecipes] = useState<RecipePage>();
   useEffect(() => {
@@ -59,8 +58,6 @@ const RecipeList = () => {
         console.error('Error deleting recipe:', error);
     }
 };
-
-
 
   return (
     <div>
@@ -102,6 +99,5 @@ const RecipeList = () => {
     </div>
   )
 }
-
 
 export default RecipeList

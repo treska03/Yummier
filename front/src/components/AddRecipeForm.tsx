@@ -49,7 +49,7 @@ function AddRecipe() {
     try {
         recipe.difficulty = recipe.difficulty.toUpperCase();
         recipe.category = recipe.category.toUpperCase();
-        
+
         const addedRecipe = await recipeService.addRecipe(recipe);
         console.log('Recipe added:', addedRecipe);
         navigate('/recipes')
@@ -57,8 +57,6 @@ function AddRecipe() {
     } catch (error) {
         console.error('Error adding recipe:', error);
     }
-    
-    
   }
 
   return (
