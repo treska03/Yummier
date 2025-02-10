@@ -1,0 +1,104 @@
+:root {
+  --warm-bg: #fff8f3;
+  --cozy-brown: #8b4513;
+  --accent-orange: #ff6b35;
+}
+
+body {
+  background-color: var(--warm-bg);
+  font-family: 'Playfair Display', serif;
+  color: #2c1810;
+}
+
+.navbar {
+  background-color: var(--cozy-brown) !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card {
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0 4px 8px rgba(139, 69, 19, 0.1);
+  transition: transform 0.2s;
+  background-color: white;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.btn-primary {
+  background-color: var(--accent-orange) !important;
+  border: none !important;
+  border-radius: 25px;
+  padding: 8px 20px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #e85a2c !important;
+  transform: scale(1.05);
+}
+
+.recipe-detail {
+  background-color: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(139, 69, 19, 0.1);
+}
+
+.list-group-item {
+  border-left: none;
+  border-right: none;
+  border-color: #ffe5d4;
+}
+
+.home-hero {
+  background: linear-gradient(45deg, #fff8f3, #ffe5d4);
+  border-radius: 20px;
+  padding: 3rem;
+  box-shadow: 0 4px 8px rgba(139, 69, 19, 0.1);
+}
+
+.delete-button {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #ff4136;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s, background-color 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.delete-button:hover {
+  transform: scale(1.1);
+  background-color: #ff1a1a;
+}
+
+.recipe-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--accent-orange);
+}
+
+.cooking-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
