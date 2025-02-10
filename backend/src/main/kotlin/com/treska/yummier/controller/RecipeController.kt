@@ -1,8 +1,8 @@
 package com.treska.yummier.controller
 
-import com.treska.yummier.dto.RecipeDto
+import com.treska.yummier.dto.RecipeCreateDto
+import com.treska.yummier.dto.RecipeResponseDto
 import com.treska.yummier.dto.RecipeFilter
-import com.treska.yummier.model.Recipe
 import com.treska.yummier.service.RecipeService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -16,20 +16,20 @@ class RecipeController(
     private val recipeService: RecipeService
 ) {
     @GetMapping("/{id}")
-    fun getRecipe(@PathVariable id: Long): Recipe {
-        return recipeService.getById(id)
+    fun getRecipe(@PathVariable id: Long): RecipeResponseDto {
+        return RecipeResponseDto.from(recipeService.getById(id))
     }
 
     @GetMapping
     fun getRecipes(
         @ModelAttribute filter: RecipeFilter?,
         @PageableDefault(size = 10, sort = ["id"]) pageable: Pageable
-    ): Page<Recipe> {
-        return recipeService.get(filter ?: RecipeFilter(), pageable)
+    ): Page<RecipeResponseDto> {
+        return recipeService.get(filter ?: RecipeFilter(), pageable).map { RecipeResponseDto.from(it) }
     }
 
     @PostMapping
-    fun addRecipe(@RequestBody recipeCreateDto: RecipeDto): RecipeDto {
+    fun addRecipe(@RequestBody recipeCreateDto: RecipeCreateDto): RecipeResponseDto {
         val recipe = recipeService.create(
             title = recipeCreateDto.title,
             description = recipeCreateDto.description,
@@ -40,7 +40,7 @@ class RecipeController(
             instructions = recipeCreateDto.instructions
         )
 
-        return RecipeDto.from(recipe)
+        return RecipeResponseDto.from(recipe)
     }
 
     @DeleteMapping("/{id}")

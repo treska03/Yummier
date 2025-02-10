@@ -1,7 +1,7 @@
 package com.treska.yummier.model
 
-import com.treska.yummier.dto.Category
-import com.treska.yummier.dto.Difficulty
+import com.treska.yummier.common.Category
+import com.treska.yummier.common.Difficulty
 import jakarta.persistence.*
 
 
