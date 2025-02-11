@@ -1,4 +1,4 @@
-package com.treska.yummier.dto
+package com.treska.yummier.dto.recipe
 
 import com.treska.yummier.common.Category
 import com.treska.yummier.common.Difficulty
