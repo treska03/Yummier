@@ -2,7 +2,7 @@ package com.treska.yummier.service
 
 import com.treska.yummier.common.Category
 import com.treska.yummier.common.Difficulty
-import com.treska.yummier.dto.RecipeFilter
+import com.treska.yummier.dto.recipe.RecipeFilter
 import com.treska.yummier.exception.RecipeNotFoundException
 import com.treska.yummier.model.Recipe
 import com.treska.yummier.repository.RecipeRepository

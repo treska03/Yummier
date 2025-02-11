@@ -1,8 +1,8 @@
 package com.treska.yummier.controller
 
-import com.treska.yummier.dto.RecipeCreateDto
-import com.treska.yummier.dto.RecipeResponseDto
-import com.treska.yummier.dto.RecipeFilter
+import com.treska.yummier.dto.recipe.RecipeCreateDto
+import com.treska.yummier.dto.recipe.RecipeResponseDto
+import com.treska.yummier.dto.recipe.RecipeFilter
 import com.treska.yummier.service.RecipeService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
