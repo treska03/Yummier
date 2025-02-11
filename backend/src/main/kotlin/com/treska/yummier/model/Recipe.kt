@@ -1,5 +1,6 @@
 package com.treska.yummier.model
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.treska.yummier.common.Category
 import com.treska.yummier.common.Difficulty
 import jakarta.persistence.*
@@ -14,6 +15,14 @@ data class Recipe(
     val timeNeeded: Int = 0,
     val difficulty: Difficulty = Difficulty.MEDIUM,
     val category: Category = Category.BREAKFAST,
-    @ElementCollection val ingredients: List<String> = listOf(),
-    @ElementCollection val instructions: List<String> = listOf()
+
+    @ElementCollection
+    val ingredients: List<String> = listOf(),
+
+    @ElementCollection
+    val instructions: List<String> = listOf(),
+
+    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
+    @JsonManagedReference
+    val reviews: List<Review> = listOf()
 )
