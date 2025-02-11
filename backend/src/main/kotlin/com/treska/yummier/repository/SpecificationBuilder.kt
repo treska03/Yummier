@@ -1,6 +1,6 @@
 package com.treska.yummier.repository
-import com.treska.yummier.dto.Category
-import com.treska.yummier.dto.Difficulty
+import com.treska.yummier.common.Category
+import com.treska.yummier.common.Difficulty
 import com.treska.yummier.dto.RecipeFilter
 import com.treska.yummier.model.Recipe
 import jakarta.persistence.criteria.Predicate
