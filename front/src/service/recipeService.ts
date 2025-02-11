@@ -3,9 +3,9 @@ const API_BASE_URL = '/api/v1';
 
 const recipeService = {
     // Fetch all recipes
-    getAllRecipes: async () => {
+    getAllRecipes: async (parameters: String) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/`);
+            const response = await fetch(`${API_BASE_URL}/${parameters}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch recipes');
             }
