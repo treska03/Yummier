@@ -14,9 +14,6 @@ class SpecificationBuilder {
             return Specification { root, query, criteriaBuilder ->
                 val predicates = mutableListOf<Predicate>()
 
-                val isCountQuery = query!!.resultType == Long::class.java ||
-                        query.resultType == java.lang.Long::class.javaObjectType
-
                 filter.title?.let {
                     predicates.add(criteriaBuilder.like(root.get<String>("title"), "%$it%"))
                 }
@@ -42,8 +39,7 @@ class SpecificationBuilder {
                 }
 
                 if (filter.minRatingAverage != null || filter.maxRatingAverage != null) {
-                    // Build a subquery to compute the average review grade for the current recipe.
-                    val subquery: Subquery<Double> = query.subquery(Double::class.java)
+                    val subquery: Subquery<Double> = query!!.subquery(Double::class.java)
                     val reviewRoot = subquery.from(Review::class.java)
                     subquery.select(criteriaBuilder.avg(reviewRoot.get<Int>("grade")))
                     subquery.where(criteriaBuilder.equal(reviewRoot.get<Recipe>("recipe"), root))
