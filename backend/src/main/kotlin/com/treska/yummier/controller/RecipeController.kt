@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("/api/v2/recipes")
+@RequestMapping("/api/v1/recipes")
 class RecipeController(
     private val recipeService: RecipeService
 ) {

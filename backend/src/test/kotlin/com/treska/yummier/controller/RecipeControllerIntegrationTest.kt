@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 
-const val BASE_URL = "/api/v2/recipes"
+const val BASE_URL = "/api/v1/recipes"
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -65,7 +65,6 @@ class RecipeControllerIntegrationTest {
             }
                 .andExpect {
                     status { isOk() }
-//                    jsonPath("$.content".javaClass).isArray()  // Verifies that the response contains an array of recipes
                 }
         }
 

@@ -10,7 +10,7 @@ import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/v2/recipes/{recipeId}/reviews")
+@RequestMapping("/api/v1/recipes/{recipeId}/reviews")
 class ReviewController(private val reviewService: ReviewService) {
 
     @GetMapping
