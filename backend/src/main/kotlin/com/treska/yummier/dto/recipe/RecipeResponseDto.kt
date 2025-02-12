@@ -1,7 +1,8 @@
-package com.treska.yummier.dto
+package com.treska.yummier.dto.recipe
 
 import com.treska.yummier.common.Category
 import com.treska.yummier.common.Difficulty
+import com.treska.yummier.dto.review.AggregatedReviewDto
 import com.treska.yummier.model.Recipe
 
 data class RecipeResponseDto(
@@ -12,7 +13,8 @@ data class RecipeResponseDto(
     val difficulty: Difficulty,
     val category: Category,
     val ingredients: List<String>,
-    val instructions: List<String>
+    val instructions: List<String>,
+    val reviewSummary: AggregatedReviewDto
 ) {
     companion object {
         fun from(recipe: Recipe): RecipeResponseDto {
@@ -24,7 +26,8 @@ data class RecipeResponseDto(
                 recipe.difficulty,
                 recipe.category,
                 recipe.ingredients,
-                recipe.instructions
+                recipe.instructions,
+                AggregatedReviewDto.from(recipe.reviews)
             )
         }
     }

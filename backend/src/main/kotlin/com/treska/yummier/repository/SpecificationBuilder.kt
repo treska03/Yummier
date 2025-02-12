@@ -1,9 +1,11 @@
 package com.treska.yummier.repository
 import com.treska.yummier.common.Category
 import com.treska.yummier.common.Difficulty
-import com.treska.yummier.dto.RecipeFilter
+import com.treska.yummier.dto.recipe.RecipeFilter
 import com.treska.yummier.model.Recipe
+import com.treska.yummier.model.Review
 import jakarta.persistence.criteria.Predicate
+import jakarta.persistence.criteria.Subquery
 import org.springframework.data.jpa.domain.Specification
 
 class SpecificationBuilder {
@@ -36,12 +38,19 @@ class SpecificationBuilder {
                     predicates.add(criteriaBuilder.equal(root.get<Category>("category"), it))
                 }
 
-                filter.minRatingAverage?.let {
-                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("ratingAverage"), it))
-                }
+                if (filter.minRatingAverage != null || filter.maxRatingAverage != null) {
+                    val subquery: Subquery<Double> = query!!.subquery(Double::class.java)
+                    val reviewRoot = subquery.from(Review::class.java)
+                    subquery.select(criteriaBuilder.avg(reviewRoot.get<Int>("grade")))
+                    subquery.where(criteriaBuilder.equal(reviewRoot.get<Recipe>("recipe"), root))
 
-                filter.maxRatingAverage?.let {
-                    predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("ratingAverage"), it))
+                    filter.minRatingAverage?.let { minRating ->
+                        predicates.add(criteriaBuilder.greaterThanOrEqualTo(subquery, minRating.toDouble()))
+                    }
+
+                    filter.maxRatingAverage?.let { maxRating ->
+                        predicates.add(criteriaBuilder.lessThanOrEqualTo(subquery, maxRating.toDouble()))
+                    }
                 }
 
                 criteriaBuilder.and(*predicates.toTypedArray())
