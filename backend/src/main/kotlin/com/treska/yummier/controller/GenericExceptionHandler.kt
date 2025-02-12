@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 
 @RestControllerAdvice
-class RecipeExceptionHandler {
+class GenericExceptionHandler {
     @ExceptionHandler
     fun handleException(e: Exception): ResponseEntity<ErrorDto> {
         val responseStatus = e.javaClass.getAnnotation(ResponseStatus::class.java)
