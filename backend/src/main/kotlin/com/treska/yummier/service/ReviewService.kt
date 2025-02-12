@@ -2,6 +2,7 @@ package com.treska.yummier.service
 
 import com.treska.yummier.exception.RecipeNotFoundException
 import com.treska.yummier.exception.ReviewNotFoundException
+import com.treska.yummier.exception.ReviewOwnerException
 import com.treska.yummier.model.Review
 import com.treska.yummier.repository.RecipeRepository
 import com.treska.yummier.repository.ReviewRepository
@@ -35,9 +36,15 @@ class ReviewService(private val recipeRepository: RecipeRepository, private val 
         return review
     }
 
-    fun deleteReview(reviewId: Long) {
-        if (!reviewRepository.existsById(reviewId)) {
-            throw ReviewNotFoundException("Review with id=[$reviewId] not found.")
+    fun deleteReview(recipeId: Long, reviewId: Long) {
+        if (!recipeRepository.existsById(recipeId)) {
+            throw RecipeNotFoundException("Recipe with id=[$recipeId] not found.")
+        }
+        val review = reviewRepository.findById(reviewId).orElseThrow {
+            ReviewNotFoundException("Review with id=[$reviewId] was not found.")
+        }
+        if (review.recipe.id != reviewId) {
+            throw ReviewOwnerException("Recipe with id=[$reviewId] is not the owner of review with id=[$reviewId].")
         }
         reviewRepository.deleteById(reviewId)
     }
