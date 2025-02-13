@@ -27,7 +27,7 @@ class ReviewController(private val reviewService: ReviewService) {
         @RequestBody reviewCreateDto: ReviewCreateDto
     ): ReviewResponseDto {
         val review = reviewService.createReview(
-            recipeId = 2,
+            recipeId = recipeId,
             content = reviewCreateDto.content,
             grade = reviewCreateDto.grade
         )
