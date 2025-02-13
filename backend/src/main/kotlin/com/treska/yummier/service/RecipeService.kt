@@ -7,10 +7,12 @@ import com.treska.yummier.exception.RecipeNotFoundException
 import com.treska.yummier.model.Recipe
 import com.treska.yummier.repository.RecipeRepository
 import com.treska.yummier.repository.SpecificationBuilder
+import jakarta.transaction.Transactional
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
+@Transactional
 @Service
 class RecipeService(private val recipeRepository: RecipeRepository) {
     fun get(filter: RecipeFilter, pageable: Pageable): Page<Recipe> {
