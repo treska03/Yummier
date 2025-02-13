@@ -43,8 +43,8 @@ class ReviewService(private val recipeRepository: RecipeRepository, private val 
         val review = reviewRepository.findById(reviewId).orElseThrow {
             ReviewNotFoundException("Review with id=[$reviewId] was not found.")
         }
-        if (review.recipe.id != reviewId) {
-            throw ReviewOwnerException("Recipe with id=[$reviewId] is not the owner of review with id=[$reviewId].")
+        if (review.recipe.id != recipeId) {
+            throw ReviewOwnerException("Recipe with id=[$recipeId] is not the owner of review with id=[$reviewId].")
         }
         reviewRepository.deleteById(reviewId)
     }
