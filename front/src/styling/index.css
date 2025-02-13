@@ -155,6 +155,15 @@ body {
   color: #333;
 }
 
+.instruction-number:hover {
+  color: black;
+  background-color: var(--warm-bg);
+}
+
+.instruction-number {
+  pointer-events: none;
+}
+
 
 @keyframes float {
   0% { transform: translateY(0px); }

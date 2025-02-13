@@ -164,8 +164,7 @@ function AddRecipe() {
             <div key={index} className="input-group mb-2">
               <button
                 type="button"
-                className="btn btn-outline-dark"
-                onClick={() => removeArrayField('instructions', index)}
+                className="btn btn-outline-dark instruction-number"
               >
                 {index}.
               </button>

@@ -14,6 +14,7 @@ function RecipeDetail() {
     content: '',
     grade: 0
   });
+  const [displayCount, setDisplayCount] = useState(5);
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -22,6 +23,9 @@ function RecipeDetail() {
       [name]: value
     }))
   }
+  const handleShowMore = () => {
+    setDisplayCount(prevCount => prevCount + 5);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -154,7 +158,7 @@ function RecipeDetail() {
 
         {/* Reviews List */}
         <div className="reviews-list">
-          {reviews.map((review) => (
+          {reviews.slice(0,displayCount).map((review) => (
             <div key={review.id} className="card mb-3">
               <div className="card-body">
                 <div className="d-flex justify-content-between align-items-center mb-2">
@@ -177,6 +181,14 @@ function RecipeDetail() {
             </div>
           ))}
         </div>
+        {/* Show More Reviews Button */}
+        {reviews.length > displayCount && (
+          <div className="text-center mt-4">
+            <button onClick={handleShowMore} className="btn btn-primary">
+              Show More
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )
