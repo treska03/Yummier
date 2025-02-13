@@ -7,17 +7,19 @@ import com.treska.yummier.model.Review
 import com.treska.yummier.repository.RecipeRepository
 import com.treska.yummier.repository.ReviewRepository
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
 @Transactional
 class ReviewService(private val recipeRepository: RecipeRepository, private val reviewRepository: ReviewRepository) {
 
-    fun getReviewsByRecipeId(recipeId: Long): List<Review> {
+    fun getReviewsByRecipeId(recipeId: Long, pageable: Pageable): Page<Review> {
         if (!recipeRepository.existsById(recipeId)) {
             throw RecipeNotFoundException("Recipe with id=[$recipeId] not found.")
         }
-        return reviewRepository.findByRecipeId(recipeId)
+        return reviewRepository.findByRecipeId(recipeId, pageable)
     }
 
     fun createReview(recipeId: Long, content: String, grade: Int): Review {
