@@ -162,6 +162,13 @@ function AddRecipe() {
           <label className="form-label">Instructions</label>
           {recipe.instructions.map((instruction, index) => (
             <div key={index} className="input-group mb-2">
+              <button
+                type="button"
+                className="btn btn-outline-dark"
+                onClick={() => removeArrayField('instructions', index)}
+              >
+                {index}.
+              </button>
               <input
                 type="text"
                 className="form-control"

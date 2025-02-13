@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import recipeService from '../service/recipeService';
 import capitalizeFirstLetter from '../helper/capitalize';
+import categoryToEmoji from '../helper/categoryToEmoji';
 
 interface Recipe {
   id: number;
@@ -112,6 +113,8 @@ const RecipeList = () => {
     }
   };
 
+
+
   return (
     <div>
       <h2 className="mb-4 text-center">Our Favorite Recipes</h2>
@@ -134,7 +137,7 @@ const RecipeList = () => {
           <input
             type="text"
             className="form-control"
-            placeholder="Search recipes by name or description..."
+            placeholder="Search recipes by name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -191,8 +194,10 @@ const RecipeList = () => {
                         ⏱️ {recipe.timeNeeded} min. •
                         <span className="ms-2">
                           {recipe.difficulty === 'EASY' ? '👶' : '👨‍🍳'}{' '}
-                          {capitalizeFirstLetter(recipe.difficulty.toLowerCase())}
+                          {capitalizeFirstLetter(recipe.difficulty.toLowerCase())} {" "}
                         </span>
+                        •{" "} {categoryToEmoji(recipe.category)}
+                         {capitalizeFirstLetter(recipe.category.toLocaleLowerCase())}
                       </small>
                     </p>
                     <Link

@@ -120,6 +120,41 @@ body {
   animation: float 3s ease-in-out infinite;
 }
 
+.reviews {
+  background-color: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(139, 69, 19, 0.1);
+}
+
+.star-rating {
+  display: flex;
+  gap: 5px;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 1.5rem;
+  color: var(--accent-orange);
+  cursor: pointer;
+}
+
+.star {
+  font-size: 1.2rem;
+  color: var(--accent-orange);
+}
+
+.reviews-list .card {
+  background-color: #f8f9fa;
+}
+
+.reviews-list .card-text {
+  font-size: 1rem;
+  color: #333;
+}
+
 
 @keyframes float {
   0% { transform: translateY(0px); }
