@@ -1,4 +1,5 @@
 package com.treska.yummier.repository
+
 import com.treska.yummier.common.Category
 import com.treska.yummier.common.Difficulty
 import com.treska.yummier.dto.recipe.RecipeFilter
@@ -15,11 +16,15 @@ class SpecificationBuilder {
                 val predicates = mutableListOf<Predicate>()
 
                 filter.title?.let {
-                    predicates.add(criteriaBuilder.like(root.get<String>("title"), "%$it%"))
+                    predicates.add(
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get<String>("title")), "%${it.lowercase()}%")
+                    )
                 }
 
                 filter.description?.let {
-                    predicates.add(criteriaBuilder.like(root.get<String>("description"), "%$it%"))
+                    predicates.add(
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get<String>("description")), "%${it.lowercase()}%")
+                    )
                 }
 
                 filter.minTimeNeeded?.let {
