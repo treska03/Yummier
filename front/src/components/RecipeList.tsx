@@ -76,7 +76,12 @@ const RecipeList = () => {
         if (pageNumber === 0) {
           setRecipes(data.content);
         } else {
-          setRecipes((prevRecipes) => [...prevRecipes, ...data.content]);
+          setRecipes((prevRecipes) => {
+            const newRecipes = data.content.filter(
+              (newRecipe) => !prevRecipes.some((prev) => prev.id === newRecipe.id)
+            );
+            return [...prevRecipes, ...newRecipes];
+          });
         }
 
         setHasMore(!data.last);
@@ -92,7 +97,7 @@ const RecipeList = () => {
   useEffect(() => {
     fetchedPages.current.clear();
     setPage(0);
-    setRecipes([]);
+    // setRecipes([]);
   }, [searchTerm, categoryFilter, difficultyFilter, minReviewFilter, maxTimeNeededFilter]);
 
   useEffect(() => {
