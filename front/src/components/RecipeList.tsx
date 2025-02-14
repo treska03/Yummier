@@ -175,19 +175,25 @@ const RecipeList = () => {
         </select>
       </div>
       <div className="filters-container mb-4 d-flex justify-content-center gap-3">
-        <div className="filter-slider">
-          <label htmlFor="minReview">Minimum Review</label>
-          <input
-            type="range"
-            id="minReview"
-            min="0"
-            max="5"
-            step="1"
-            value={minReviewFilter}
-            onChange={(e) => setMinReviewFilter(parseFloat(e.target.value))}
-          />
-          <span>{minReviewFilter}</span>
-        </div>
+
+      <div className="star-rating">
+    {[1, 2, 3, 4, 5].map((gradeValue) => (
+      <button
+        type="button"
+        name="grade"
+        key={gradeValue}
+        onClick={() => {
+          // Toggle the selected rating
+          setMinReviewFilter(prev => prev === gradeValue ? 0 : gradeValue);
+        }}
+        className="star-btn"
+        style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}
+      >
+        {minReviewFilter >= gradeValue ? '★' : '☆'}
+      </button>
+    ))}
+  </div>
+
 
         <div className="filter-slider">
           <label htmlFor="maxTimeNeeded">Max Time Needed (min)</label>
