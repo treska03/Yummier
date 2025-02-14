@@ -175,6 +175,7 @@ const RecipeList = () => {
         </select>
       </div>
       <div className="filters-container mb-4 d-flex justify-content-center gap-3">
+
       <div className="star-rating">
     {[1, 2, 3, 4, 5].map((gradeValue) => (
       <button
@@ -192,6 +193,7 @@ const RecipeList = () => {
       </button>
     ))}
   </div>
+
 
         <div className="filter-slider">
           <label htmlFor="maxTimeNeeded">Max Time Needed (min)</label>

@@ -1,5 +1,6 @@
 package com.treska.yummier.controller
 
+import com.treska.yummier.dto.PaginatedResponseDto
 import com.treska.yummier.dto.review.ReviewCreateDto
 import com.treska.yummier.dto.review.ReviewResponseDto
 import com.treska.yummier.model.Review
@@ -17,8 +18,11 @@ class ReviewController(private val reviewService: ReviewService) {
     fun getReviews(
         @PathVariable recipeId: Long,
         @PageableDefault(page = 0, size = 10, sort = ["id"], direction = Sort.Direction.ASC) pageable: Pageable
-    ): List<ReviewResponseDto> {
-        return reviewService.getReviewsByRecipeId(recipeId = recipeId).map { ReviewResponseDto.from(it) }
+    ): PaginatedResponseDto<ReviewResponseDto> {
+        val page = reviewService.getReviewsByRecipeId(recipeId = recipeId, pageable = pageable)
+            .map { ReviewResponseDto.from(it) }
+
+        return PaginatedResponseDto.from(page)
     }
 
     @PostMapping

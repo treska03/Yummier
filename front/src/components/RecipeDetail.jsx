@@ -34,6 +34,7 @@ function RecipeDetail() {
           const recipeData = await recipeService.getById(parseInt(id))
           setRecipes(recipeData);
           const reviewsData = await reviewService.getReviews(parseInt(id))
+
           setReviews(reviewsData)
         } catch (error) {
           console.error('Error fetching recipes/reviews:', error);
@@ -49,6 +50,7 @@ function RecipeDetail() {
       console.log(newReview);
       await reviewService.addReview(parseInt(id), newReview);
       const reviewsData = await reviewService.getReviews(parseInt(id));
+
       setReviews(reviewsData);
       setNewReview({
         recipeId: parseInt(id),
