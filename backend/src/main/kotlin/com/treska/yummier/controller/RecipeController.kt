@@ -1,5 +1,6 @@
 package com.treska.yummier.controller
 
+import com.treska.yummier.dto.PaginatedResponseDto
 import com.treska.yummier.dto.recipe.RecipeCreateDto
 import com.treska.yummier.dto.recipe.RecipeResponseDto
 import com.treska.yummier.dto.recipe.RecipeFilter
@@ -22,10 +23,13 @@ class RecipeController(
 
     @GetMapping
     fun getRecipes(
-        @ModelAttribute filter: RecipeFilter?,
+        @ModelAttribute filter: RecipeFilter,
         @PageableDefault(size = 10, sort = ["id"]) pageable: Pageable
-    ): Page<RecipeResponseDto> {
-        return recipeService.get(filter ?: RecipeFilter(), pageable).map { RecipeResponseDto.from(it) }
+    ): PaginatedResponseDto<RecipeResponseDto> {
+        val page = recipeService.get(filter, pageable)
+            .map { RecipeResponseDto.from(it) }
+
+        return PaginatedResponseDto.from(page)
     }
 
     @PostMapping
