@@ -1,11 +1,12 @@
-const API_BASE_URL = '/api/v1';
+const API_BASE_URL = '/api/v1/recipes';
 
 
 const recipeService = {
+
     // Fetch all recipes
     getAllRecipes: async (parameters: String) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/${parameters}`);
+            const response = await fetch(`${API_BASE_URL}${parameters}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch recipes');
             }
@@ -35,7 +36,7 @@ const recipeService = {
     // Add a new recipe
     addRecipe: async (recipeDto) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/`, {
+            const response = await fetch(`${API_BASE_URL}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,7 +66,7 @@ const recipeService = {
             console.error('Error deleting recipe:', error);
             throw error;
         }
-    }
+    },
 };
 
 export default recipeService;
