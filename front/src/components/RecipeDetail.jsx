@@ -46,7 +46,7 @@ function RecipeDetail() {
     e.preventDefault();
     try {
       console.log(newReview);
-      await recipeService.addReview(newReview);
+      await recipeService.addReview(parseInt(id), newReview);
       const reviewsData = await recipeService.getReviews(parseInt(id));
       setReviews(reviewsData);
       setNewReview({
@@ -61,7 +61,7 @@ function RecipeDetail() {
 
   const handleDelete = async (reviewId) => {
     try {
-      await recipeService.deleteReview(reviewId);
+      await recipeService.deleteReview(parseInt(id), reviewId);
       setReviews(reviews.filter(review => review.id !== reviewId));
     } catch (error) {
       console.error('Error deleting review:', error);

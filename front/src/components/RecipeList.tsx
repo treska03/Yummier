@@ -36,6 +36,8 @@ const RecipeList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [difficultyFilter, setDifficultyFilter] = useState('ALL');
+  const [minReviewFilter, setMinReviewFilter] = useState(0);
+  const [maxTimeNeededFilter, setMaxTimeNeededFilter] = useState(120);
 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [page, setPage] = useState(0);
@@ -59,6 +61,12 @@ const RecipeList = () => {
       if (difficultyFilter !== 'ALL') {
         queryParams += `&difficulty=${difficultyFilter}`;
       }
+      if (minReviewFilter > 0) {
+        queryParams += `&minReview=${minReviewFilter}`;
+      }
+      if (maxTimeNeededFilter < 120) {
+        queryParams += `&maxTimeNeeded=${maxTimeNeededFilter}`;
+      }
 
       const data = await recipeService.getAllRecipes(queryParams);
       if (pageNumber === 0) setRecipes(data.content);
@@ -70,12 +78,12 @@ const RecipeList = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchTerm,categoryFilter, difficultyFilter]);
+  }, [searchTerm,categoryFilter, difficultyFilter, minReviewFilter, maxTimeNeededFilter]);
 
   useEffect(() => {
     fetchedPages.current.clear();
     setPage(0);
-  }, [searchTerm, categoryFilter, difficultyFilter]);
+  }, [searchTerm, categoryFilter, difficultyFilter, minReviewFilter, maxTimeNeededFilter]);
 
 
   useEffect(() => {
@@ -112,8 +120,6 @@ const RecipeList = () => {
       console.error('Error deleting recipe:', error);
     }
   };
-
-
 
   return (
     <div>
@@ -168,6 +174,36 @@ const RecipeList = () => {
           <option value="HARD">Hard</option>
         </select>
       </div>
+      <div className="filters-container mb-4 d-flex justify-content-center gap-3">
+        <div className="filter-slider">
+          <label htmlFor="minReview">Minimum Review</label>
+          <input
+            type="range"
+            id="minReview"
+            min="0"
+            max="5"
+            step="1"
+            value={minReviewFilter}
+            onChange={(e) => setMinReviewFilter(parseFloat(e.target.value))}
+          />
+          <span>{minReviewFilter}</span>
+        </div>
+
+        <div className="filter-slider">
+          <label htmlFor="maxTimeNeeded">Max Time Needed (min)</label>
+          <input
+            type="range"
+            id="maxTimeNeeded"
+            min="0"
+            max="120"
+            step="5"
+            value={maxTimeNeededFilter}
+            onChange={(e) => setMaxTimeNeededFilter(parseInt(e.target.value))}
+          />
+          <span>{maxTimeNeededFilter}</span>
+        </div>
+      </div>
+
 
       {/* Recipe Cards */}
       <div className="row">
