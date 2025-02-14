@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { useParams } from 'react-router-dom'
 import recipeService from '../service/recipeService'
+import reviewService from '../service/reviewService';
 import capitalizeFirstLetter from '../helper/capitalize';
 import categoryToEmoji from '../helper/categoryToEmoji';
 
@@ -32,7 +33,7 @@ function RecipeDetail() {
         try {
           const recipeData = await recipeService.getById(parseInt(id))
           setRecipes(recipeData);
-          const reviewsData = await recipeService.getReviews(parseInt(id))
+          const reviewsData = await reviewService.getReviews(parseInt(id))
           setReviews(reviewsData)
         } catch (error) {
           console.error('Error fetching recipes/reviews:', error);
@@ -46,8 +47,8 @@ function RecipeDetail() {
     e.preventDefault();
     try {
       console.log(newReview);
-      await recipeService.addReview(parseInt(id), newReview);
-      const reviewsData = await recipeService.getReviews(parseInt(id));
+      await reviewService.addReview(parseInt(id), newReview);
+      const reviewsData = await reviewService.getReviews(parseInt(id));
       setReviews(reviewsData);
       setNewReview({
         recipeId: parseInt(id),
@@ -61,7 +62,7 @@ function RecipeDetail() {
 
   const handleDelete = async (reviewId) => {
     try {
-      await recipeService.deleteReview(parseInt(id), reviewId);
+      await reviewService.deleteReview(parseInt(id), reviewId);
       setReviews(reviews.filter(review => review.id !== reviewId));
     } catch (error) {
       console.error('Error deleting review:', error);
