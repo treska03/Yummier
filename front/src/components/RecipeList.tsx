@@ -36,55 +36,64 @@ const RecipeList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [difficultyFilter, setDifficultyFilter] = useState('ALL');
-  const [minReviewFilter, setMinReviewFilter] = useState(0);
-  const [maxTimeNeededFilter, setMaxTimeNeededFilter] = useState(120);
+
+  const [minReviewFilter, setMinReviewFilter] = useState(2.5);
+  const [maxTimeNeededFilter, setMaxTimeNeededFilter] = useState(150);
+  const gradeMarksLabels = [2.5, 3, 3.5, 4, 4.5, 5];
+  const timeLabels = ["30", "60", "90", "120", "All"];
 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-
   const fetchedPages = useRef(new Set<number>());
 
-  const fetchRecipes = useCallback(async (pageNumber: number) => {
-    try {
-      setLoading(true);
 
-      let queryParams = `?page=${pageNumber}`;
-      if (searchTerm){
-        queryParams += `&title=${searchTerm}`;
-      }
-      if (categoryFilter !== 'ALL') {
-        queryParams += `&category=${categoryFilter}`;
-      }
-      if (difficultyFilter !== 'ALL') {
-        queryParams += `&difficulty=${difficultyFilter}`;
-      }
-      if (minReviewFilter > 0) {
-        queryParams += `&minReview=${minReviewFilter}`;
-      }
-      if (maxTimeNeededFilter < 120) {
-        queryParams += `&maxTimeNeeded=${maxTimeNeededFilter}`;
-      }
+  const fetchRecipes = useCallback(
+    async (pageNumber: number) => {
+      try {
+        setLoading(true);
 
-      const data = await recipeService.getAllRecipes(queryParams);
-      if (pageNumber === 0) setRecipes(data.content);
-      else setRecipes((prevRecipes) => [...prevRecipes, ...data.content]);
+        let queryParams = `?page=${pageNumber}`;
+        if (searchTerm) {
+          queryParams += `&title=${searchTerm}`;
+        }
+        if (categoryFilter !== 'ALL') {
+          queryParams += `&category=${categoryFilter}`;
+        }
+        if (difficultyFilter !== 'ALL') {
+          queryParams += `&difficulty=${difficultyFilter}`;
+        }
+        if (minReviewFilter > 2.5) {
+          queryParams += `&minRatingAverage=${minReviewFilter}`;
+        }
+        if (maxTimeNeededFilter < 150) {
+          queryParams += `&maxTimeNeeded=${maxTimeNeededFilter}`;
+        }
 
-      setHasMore(!data.last);
-    } catch (error) {
-      console.error('Error fetching recipes:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [searchTerm,categoryFilter, difficultyFilter, minReviewFilter, maxTimeNeededFilter]);
+        const data = await recipeService.getAllRecipes(queryParams);
+        if (pageNumber === 0) {
+          setRecipes(data.content);
+        } else {
+          setRecipes((prevRecipes) => [...prevRecipes, ...data.content]);
+        }
+
+        setHasMore(!data.last);
+      } catch (error) {
+        console.error('Error fetching recipes:', error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [searchTerm, categoryFilter, difficultyFilter, minReviewFilter, maxTimeNeededFilter]
+  );
 
   useEffect(() => {
     fetchedPages.current.clear();
     setPage(0);
+    setRecipes([]);
   }, [searchTerm, categoryFilter, difficultyFilter, minReviewFilter, maxTimeNeededFilter]);
-
 
   useEffect(() => {
     if (fetchedPages.current.has(page)) return;
@@ -92,12 +101,11 @@ const RecipeList = () => {
     fetchRecipes(page);
   }, [fetchRecipes, page]);
 
-
   const handleScroll = useCallback(() => {
     const scrollTop = window.scrollY;
     const windowHeight = window.innerHeight;
     const scrollHeight = document.documentElement.scrollHeight;
-    
+
     if (scrollTop + windowHeight >= scrollHeight - 50 && !loading && hasMore) {
       setPage((prevPage) => prevPage + 1);
     }
@@ -108,12 +116,11 @@ const RecipeList = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
-
   const handleDelete = async (id: number) => {
     try {
       if (window.confirm('Are you sure you want to delete this recipe?')) {
         await recipeService.deleteRecipe(id);
-        setRecipes((prevRecipes) => prevRecipes.filter((recipe) => recipe.id !== id));
+        setRecipes((prevRecipes) => prevRecipes.filter((r) => r.id !== id));
         console.log('Recipe deleted');
       }
     } catch (error) {
@@ -150,12 +157,12 @@ const RecipeList = () => {
         </div>
       </div>
 
-      {/* Filters */}
+      {/* Category & Difficulty Filters */}
       <div className="filters-container mb-4 d-flex justify-content-center gap-3">
         <select
           className="form-select"
           value={categoryFilter}
-          onChange={e => setCategoryFilter(e.target.value)}
+          onChange={(e) => setCategoryFilter(e.target.value)}
         >
           <option value="ALL">All Categories</option>
           <option value="BREAKFAST">Breakfast</option>
@@ -166,7 +173,7 @@ const RecipeList = () => {
         <select
           className="form-select"
           value={difficultyFilter}
-          onChange={e => setDifficultyFilter(e.target.value)}
+          onChange={(e) => setDifficultyFilter(e.target.value)}
         >
           <option value="ALL">All Difficulties</option>
           <option value="EASY">Easy</option>
@@ -174,42 +181,59 @@ const RecipeList = () => {
           <option value="HARD">Hard</option>
         </select>
       </div>
-      <div className="filters-container mb-4 d-flex justify-content-center gap-3">
 
-      <div className="star-rating">
-    {[1, 2, 3, 4, 5].map((gradeValue) => (
-      <button
-        type="button"
-        name="grade"
-        key={gradeValue}
-        onClick={() => {
-          // Toggle the selected rating
-          setMinReviewFilter(prev => prev === gradeValue ? 0 : gradeValue);
-        }}
-        className="star-btn"
-        style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}
-      >
-        {minReviewFilter >= gradeValue ? '★' : '☆'}
-      </button>
-    ))}
-  </div>
-
-
-        <div className="filter-slider">
-          <label htmlFor="maxTimeNeeded">Max Time Needed (min)</label>
+      <div className="sliders-container">
+      {/* GRADE SLIDER */}
+      <div className="slider-group">
+        <div className="slider-header">{minReviewFilter === 2.5 ? "Give me all recipes" : 
+        minReviewFilter === 5 ? "Only the best recipes": "Average grade over " + minReviewFilter}</div>
+        <div className="slider-wrapper">
           <input
             type="range"
-            id="maxTimeNeeded"
-            min="0"
-            max="120"
-            step="5"
-            value={maxTimeNeededFilter}
-            onChange={(e) => setMaxTimeNeededFilter(parseInt(e.target.value))}
+            min="2.5"
+            max="5"
+            step="0.5"
+            value={minReviewFilter}
+            onChange={(e) => setMinReviewFilter(parseFloat(e.target.value))}
           />
-          <span>{maxTimeNeededFilter}</span>
+          <div className="slider-labels">
+            {gradeMarksLabels.map((mark) => (
+              <span key={mark}>{mark === 5 ? mark : 
+                mark === 2.5 ? "All": mark + "+" }</span>
+            ))}
+          </div>
         </div>
       </div>
 
+      {/* TIME NEEDED SLIDER */}
+      <div className="slider-group">
+        {/* Show the selected label up top */}
+        <div className="slider-header">
+          {maxTimeNeededFilter === 150
+            ? "Time doesn't matter"
+            : `You can do it under ${maxTimeNeededFilter} min`}
+        </div>
+        <div className="slider-wrapper">
+          <input
+            type="range"
+            min="30"
+            max="150"
+            step="30"
+            value={maxTimeNeededFilter}
+            onChange={(e) => setMaxTimeNeededFilter(parseInt(e.target.value))}
+          />
+          <div className="slider-labels">
+            {timeLabels.map((label) => (
+              <span key={label}>
+                {label === "All" ? label : `${label}`}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+      
 
       {/* Recipe Cards */}
       <div className="row">
@@ -233,19 +257,16 @@ const RecipeList = () => {
                   <div className="mt-3">
                     <p className="card-text">
                       <small className="text-muted">
-                        ⏱️ {recipe.timeNeeded} min. •
+                        ⏱️ {recipe.timeNeeded} min •
                         <span className="ms-2">
                           {recipe.difficulty === 'EASY' ? '👶' : '👨‍🍳'}{' '}
-                          {capitalizeFirstLetter(recipe.difficulty.toLowerCase())} {" "}
+                          {capitalizeFirstLetter(recipe.difficulty.toLowerCase())}{' '}
                         </span>
-                        •{" "} {categoryToEmoji(recipe.category)}
-                         {capitalizeFirstLetter(recipe.category.toLocaleLowerCase())}
+                        • {categoryToEmoji(recipe.category)}
+                        {capitalizeFirstLetter(recipe.category.toLocaleLowerCase())}
                       </small>
                     </p>
-                    <Link
-                      to={`/recipe/${recipe.id}`}
-                      className="btn btn-primary w-100"
-                    >
+                    <Link to={`/recipe/${recipe.id}`} className="btn btn-primary w-100">
                       View Recipe
                     </Link>
                   </div>

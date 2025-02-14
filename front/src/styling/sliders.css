@@ -1,0 +1,79 @@
+.sliders-container {
+  display: flex;             /* Put sliders side by side */
+  justify-content: center;   /* Center horizontally */
+  gap: 2rem;                 /* Spacing between sliders */
+  margin: 2rem 0;            /* Some vertical spacing */
+}
+
+.slider-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slider-header {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+/* Wrap the slider and labels together */
+.slider-wrapper {
+  position: relative;
+  width: 200px;  /* You can adjust width as needed */
+}
+
+/* Style the range input */
+.slider-wrapper input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+}
+
+.slider-wrapper input[type="range"]:focus {
+  outline: none;
+}
+
+/* Track styling for WebKit browsers */
+.slider-wrapper input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  background: #ddd;
+  border-radius: 2px;
+}
+
+.slider-wrapper input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  margin-top: -6px; /* Center thumb vertically on track */
+  background: #000; /* Customize thumb color */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Track styling for Firefox */
+.slider-wrapper input[type="range"]::-moz-range-track {
+  height: 4px;
+  background: #ddd;
+  border-radius: 2px;
+}
+.slider-wrapper input[type="range"]::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  background: #000;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Container for the labels underneath the slider */
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #555;
+  width: 100%;
+}

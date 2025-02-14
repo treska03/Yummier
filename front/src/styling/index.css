@@ -4,6 +4,10 @@
   --accent-orange: #ff6b35;
 }
 
+html {
+  overflow-y: scroll;
+}
+
 body {
   background-color: var(--warm-bg);
   font-family: 'Playfair Display', serif;

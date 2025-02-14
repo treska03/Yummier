@@ -166,7 +166,7 @@ function AddRecipe() {
                 type="button"
                 className="btn btn-outline-dark instruction-number"
               >
-                {index}.
+                {index + 1}.
               </button>
               <input
                 type="text"
