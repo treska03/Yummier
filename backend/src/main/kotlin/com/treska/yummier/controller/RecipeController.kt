@@ -2,6 +2,7 @@ package com.treska.yummier.controller
 
 import com.treska.yummier.dto.PaginatedResponseDto
 import com.treska.yummier.dto.recipe.RecipeCreateDto
+import com.treska.yummier.dto.recipe.RecipeEditDto
 import com.treska.yummier.dto.recipe.RecipeResponseDto
 import com.treska.yummier.dto.recipe.RecipeFilter
 import com.treska.yummier.service.RecipeService
@@ -42,6 +43,22 @@ class RecipeController(
             category = recipeCreateDto.category,
             ingredients = recipeCreateDto.ingredients,
             instructions = recipeCreateDto.instructions
+        )
+
+        return RecipeResponseDto.from(recipe)
+    }
+
+    @PutMapping("/{id}")
+    fun editRecipe(@RequestBody recipeEditDto: RecipeEditDto, @PathVariable id: Long): RecipeResponseDto {
+        val recipe = recipeService.edit(
+            id = id,
+            title = recipeEditDto.title,
+            description = recipeEditDto.description,
+            timeNeeded = recipeEditDto.timeNeeded,
+            difficulty = recipeEditDto.difficulty,
+            category = recipeEditDto.category,
+            ingredients = recipeEditDto.ingredients,
+            instructions = recipeEditDto.instructions
         )
 
         return RecipeResponseDto.from(recipe)
