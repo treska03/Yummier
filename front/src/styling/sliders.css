@@ -1,8 +1,8 @@
 .sliders-container {
-  display: flex;             /* Put sliders side by side */
-  justify-content: center;   /* Center horizontally */
-  gap: 2rem;                 /* Spacing between sliders */
-  margin: 2rem 0;            /* Some vertical spacing */
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0;
 }
 
 .slider-group {
@@ -17,58 +17,52 @@
   text-align: center;
 }
 
-/* Wrap the slider and labels together */
 .slider-wrapper {
   position: relative;
-  width: 200px;  /* You can adjust width as needed */
+  width: 200px;
 }
 
-/* Style the range input */
-.slider-wrapper input[type="range"] {
+.slider {
   width: 100%;
+  height: 8px;
   -webkit-appearance: none;
   appearance: none;
-  background: transparent;
-  margin: 0;
-  padding: 0;
-}
-
-.slider-wrapper input[type="range"]:focus {
+  border-radius: 4px;
   outline: none;
 }
 
-/* Track styling for WebKit browsers */
-.slider-wrapper input[type="range"]::-webkit-slider-runnable-track {
-  height: 4px;
-  background: #ddd;
-  border-radius: 2px;
+.slider.grade-slider {
+  background-image: 
+    repeating-linear-gradient(90deg,
+      #bbb 0, #bbb 2px,
+      transparent 2px, transparent calc(100% / 5)),
+    linear-gradient(90deg, #f5f5f5 var(--value, 50%), black var(--value, 50%));
 }
 
-.slider-wrapper input[type="range"]::-webkit-slider-thumb {
+.slider.time-slider {
+  background-image: 
+    repeating-linear-gradient(90deg,
+      #bbb 0, #bbb 2px,
+      transparent 2px, transparent calc(100% / 4)),
+    linear-gradient(90deg, black var(--value, 50%), #f5f5f5 var(--value, 50%));
+}
+
+.slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  height: 16px;
-  width: 16px;
-  margin-top: -6px; /* Center thumb vertically on track */
-  background: #000; /* Customize thumb color */
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border: 3px solid black;
   border-radius: 50%;
   cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
 }
 
-/* Track styling for Firefox */
-.slider-wrapper input[type="range"]::-moz-range-track {
-  height: 4px;
-  background: #ddd;
-  border-radius: 2px;
-}
-.slider-wrapper input[type="range"]::-moz-range-thumb {
-  height: 16px;
-  width: 16px;
-  background: #000;
-  border-radius: 50%;
-  cursor: pointer;
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
 }
 
-/* Container for the labels underneath the slider */
 .slider-labels {
   display: flex;
   justify-content: space-between;

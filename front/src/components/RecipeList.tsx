@@ -97,7 +97,6 @@ const RecipeList = () => {
   useEffect(() => {
     fetchedPages.current.clear();
     setPage(0);
-    // setRecipes([]);
   }, [searchTerm, categoryFilter, difficultyFilter, minReviewFilter, maxTimeNeededFilter]);
 
   useEffect(() => {
@@ -194,12 +193,16 @@ const RecipeList = () => {
         minReviewFilter === 5 ? "Only the best recipes": "Average grade over " + minReviewFilter}</div>
         <div className="slider-wrapper">
           <input
+          className='slider grade-slider'
             type="range"
             min="2.5"
             max="5"
             step="0.5"
             value={minReviewFilter}
             onChange={(e) => setMinReviewFilter(parseFloat(e.target.value))}
+            style={{
+              '--value': `${((minReviewFilter - 2.5) / (5 - 2.5)) * 100}%`
+            } as React.CSSProperties}
           />
           <div className="slider-labels">
             {gradeMarksLabels.map((mark) => (
@@ -220,12 +223,16 @@ const RecipeList = () => {
         </div>
         <div className="slider-wrapper">
           <input
+          className='slider time-slider'
             type="range"
             min="30"
             max="150"
             step="30"
             value={maxTimeNeededFilter}
             onChange={(e) => setMaxTimeNeededFilter(parseInt(e.target.value))}
+            style={{
+              '--value': `${((maxTimeNeededFilter - 30) / (150 - 30)) * 100}%`
+            } as React.CSSProperties}
           />
           <div className="slider-labels">
             {timeLabels.map((label) => (
