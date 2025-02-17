@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.delete
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.*
 
 const val BASE_URL = "/api/v1/recipes"
 
@@ -99,7 +96,11 @@ class RecipeControllerIntegrationTest {
         @Test
         fun `pagination should work`() {
             for (i in 1..15) {
-                val jsonPayload = objectMapper.writeValueAsString(correctPostRequestBody + ("title" to "#$i: ${correctPostRequestBody.get("title")}"))
+                val jsonPayload = objectMapper.writeValueAsString(
+                    correctPostRequestBody + ("title" to "#$i: ${
+                        correctPostRequestBody.get("title")
+                    }")
+                )
 
                 mockMvc.post(BASE_URL) {
                     contentType = MediaType.APPLICATION_JSON
@@ -120,11 +121,14 @@ class RecipeControllerIntegrationTest {
                 }
         }
 
-
         @Test
         fun `filtering by review average should work`() {
             for (i in 1..3) {
-                val jsonPayload = objectMapper.writeValueAsString(correctPostRequestBody + ("title" to "#$i: ${correctPostRequestBody.get("title")}"))
+                val jsonPayload = objectMapper.writeValueAsString(
+                    correctPostRequestBody + ("title" to "#$i: ${
+                        correctPostRequestBody.get("title")
+                    }")
+                )
 
                 mockMvc.post(BASE_URL) {
                     contentType = MediaType.APPLICATION_JSON
@@ -155,6 +159,53 @@ class RecipeControllerIntegrationTest {
                 .andExpect {
                     status { isOk() }
                     jsonPath("$.content.size()", equalTo(1))
+                }
+        }
+
+        @Test
+        fun `editing recipe should work`() {
+            val postPayload = objectMapper.writeValueAsString(correctPostRequestBody)
+
+            val postResult = mockMvc.post(BASE_URL) {
+                contentType = MediaType.APPLICATION_JSON
+                content = postPayload
+            }
+                .andExpect {
+                    status { isOk() }
+                    jsonPath("$.title", equalTo("Test Recipe"))
+                }
+                .andReturn()
+
+            val responseContent = postResult.response.contentAsString
+            val recipeId = objectMapper.readTree(responseContent).get("id").asLong()
+
+            val putPayload = objectMapper.writeValueAsString(correctPutRequestBody)
+
+            val putResult = mockMvc.put("$BASE_URL/{id}", recipeId) {
+                contentType = MediaType.APPLICATION_JSON
+                content = putPayload
+            }
+                .andExpect {
+                    status { isOk() }
+                    jsonPath("$.id", equalTo(recipeId.toInt()))
+                    jsonPath("$.title", equalTo("Test Recipe"))
+                    jsonPath("$.timeNeeded", equalTo(15))
+                }
+        }
+
+        @Test
+        fun `put request with id of not existing recipe should create a new one`() {
+            val nonExistingId = 999_999_999
+            val jsonPayload = objectMapper.writeValueAsString(correctPutRequestBody)
+
+            val putResult = mockMvc.put("$BASE_URL/{id}", nonExistingId) {
+                contentType = MediaType.APPLICATION_JSON
+                content = jsonPayload
+            }
+                .andExpect {
+                    status { isOk() }
+                    jsonPath("$.title", equalTo("Test Recipe"))
+                    jsonPath("$.timeNeeded", equalTo(15))
                 }
         }
     }
@@ -202,6 +253,16 @@ class RecipeControllerIntegrationTest {
         "title" to "Test Recipe",
         "description" to "A test recipe description",
         "timeNeeded" to 30,
+        "difficulty" to "EASY",
+        "category" to "LUNCH",
+        "ingredients" to listOf("Ingredient 1", "Ingredient 2"),
+        "instructions" to listOf("Step 1", "Step 2")
+    )
+
+    private val correctPutRequestBody = mapOf(
+        "title" to "Test Recipe",
+        "description" to "A test recipe description",
+        "timeNeeded" to 15,
         "difficulty" to "EASY",
         "category" to "LUNCH",
         "ingredients" to listOf("Ingredient 1", "Ingredient 2"),
