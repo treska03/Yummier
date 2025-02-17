@@ -55,7 +55,7 @@ const RecipeList = () => {
       try {
         setLoading(true);
 
-        let queryParams = `?page=${pageNumber}`;
+        let queryParams = `?page=${pageNumber}&size=9`;
         if (searchTerm) {
           queryParams += `&title=${searchTerm}`;
         }
@@ -200,9 +200,6 @@ const RecipeList = () => {
             step="0.5"
             value={minReviewFilter}
             onChange={(e) => setMinReviewFilter(parseFloat(e.target.value))}
-            style={{
-              '--value': `${((minReviewFilter - 2.5) / (5 - 2.5)) * 100}%`
-            } as React.CSSProperties}
           />
           <div className="slider-labels">
             {gradeMarksLabels.map((mark) => (
@@ -230,9 +227,6 @@ const RecipeList = () => {
             step="30"
             value={maxTimeNeededFilter}
             onChange={(e) => setMaxTimeNeededFilter(parseInt(e.target.value))}
-            style={{
-              '--value': `${((maxTimeNeededFilter - 30) / (150 - 30)) * 100}%`
-            } as React.CSSProperties}
           />
           <div className="slider-labels">
             {timeLabels.map((label) => (
