@@ -258,6 +258,9 @@ const RecipeList = () => {
                   >
                     ✕
                   </button>
+                  <Link to={`/recipe/edit/${recipe.id}`} className="edit-button">
+                  🖋
+                  </Link>
                   <h5 className="card-title text-center mb-3">{recipe.title}</h5>
                   <p className="card-text flex-grow-1">{recipe.description}</p>
                   <div className="mt-3">
