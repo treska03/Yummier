@@ -53,6 +53,25 @@ const recipeService = {
         }
     },
 
+    // Edit a recipe by ID
+    editRecipe: async (id, recipeDto) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(recipeDto),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to update recipe');
+            }
+        } catch (error) {
+            console.error('Error updating recipe:', error);
+            throw error;
+        }
+    },
+
     // Delete a recipe by ID
     deleteRecipe: async (id) => {
         try {
