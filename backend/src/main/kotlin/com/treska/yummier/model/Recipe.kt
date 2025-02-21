@@ -10,17 +10,17 @@ import jakarta.persistence.*
 @Table(name = "recipes")
 data class Recipe(
     @Id @GeneratedValue(strategy = GenerationType.AUTO) val id: Long = 0,
-    val title: String = "",
-    val description: String = "",
-    val timeNeeded: Int = 0,
-    val difficulty: Difficulty = Difficulty.MEDIUM,
-    val category: Category = Category.BREAKFAST,
+    var title: String = "",
+    var description: String = "",
+    var timeNeeded: Int = 0,
+    var difficulty: Difficulty = Difficulty.MEDIUM,
+    var category: Category = Category.BREAKFAST,
 
     @ElementCollection
-    val ingredients: List<String> = listOf(),
+    var ingredients: List<String> = listOf(),
 
     @ElementCollection
-    val instructions: List<String> = listOf(),
+    var instructions: List<String> = listOf(),
 
     @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL])
     @JsonManagedReference
