@@ -1,57 +1,75 @@
-import React, {useState, useEffect} from 'react'
-import { useParams } from 'react-router-dom'
-import recipeService from '../service/recipeService'
+import React, { useState, useEffect, useRef,useCallback} from 'react';
+import { useParams } from 'react-router-dom';
+import recipeService from '../service/recipeService';
 import reviewService from '../service/reviewService';
 import capitalizeFirstLetter from '../helper/capitalize';
 import categoryToEmoji from '../helper/categoryToEmoji';
 
-
 function RecipeDetail() {
-  const { id } = useParams()
-  const [recipe, setRecipes] = useState();
+  const { id } = useParams();
+  const [recipe, setRecipe] = useState();
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({
     recipeId: parseInt(id),
     content: '',
     grade: 0
   });
-  const [displayCount, setDisplayCount] = useState(5);
-
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  
+  const fetchedPages = useRef(new Set());
+  
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setNewReview(prev => ({
       ...prev,
       [name]: value
-    }))
-  }
-  const handleShowMore = () => {
-    setDisplayCount(prevCount => prevCount + 5);
+    }));
   };
+
+  const fetchReviews = useCallback(async (pageNumber) => {
+    try {
+      setLoading(true);
+      const reviewsData = await reviewService.getReviews(parseInt(id), pageNumber);
+      if (pageNumber === 0) setReviews(reviewsData.content);
+      else setReviews((prevReviews) => [...prevReviews, ...reviewsData.content]);
+      
+      setHasMore(!reviewsData.last);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
 
   useEffect(() => {
     const fetchData = async () => {
-        try {
-          const recipeData = await recipeService.getById(parseInt(id))
-          setRecipes(recipeData);
-          const reviewsData = await reviewService.getReviews(parseInt(id))
+      try {
+        const recipeData = await recipeService.getById(parseInt(id));
+        setRecipe(recipeData);
+        setPage(0);
+        fetchedPages.current.clear();
+      } catch (error) {
+        console.error('Error fetching recipe:', error);
+      }
+    };
 
-          setReviews(reviewsData)
-        } catch (error) {
-          console.error('Error fetching recipes/reviews:', error);
-        }
-      };
-
-      fetchData();
+    fetchData();
   }, [id]);
+
+  useEffect(() => {
+      if (fetchedPages.current.has(page)) return;
+      fetchedPages.current.add(page);
+      fetchReviews(page);
+    }, [fetchReviews, page]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(newReview);
       await reviewService.addReview(parseInt(id), newReview);
-      const reviewsData = await reviewService.getReviews(parseInt(id));
-
-      setReviews(reviewsData);
+      setPage(0);
+      fetchedPages.current.clear();
       setNewReview({
         recipeId: parseInt(id),
         content: '',
@@ -71,6 +89,10 @@ function RecipeDetail() {
     }
   };
 
+  const handleLoadMore = () => {
+    setPage(prevPage => prevPage + 1);
+  };
+
   if (!recipe) {
     return <div>Recipe not found</div>
   }
@@ -87,7 +109,7 @@ function RecipeDetail() {
           </div>
           <div className='badge bg-light text-dark '>{categoryToEmoji(recipe.category)} {capitalizeFirstLetter(recipe.category.toLowerCase())} </div>
         </div>
-        
+
         <div className="row mt-4">
           <div className="col-md-6">
             <h3>Ingredients</h3>
@@ -161,7 +183,7 @@ function RecipeDetail() {
 
         {/* Reviews List */}
         <div className="reviews-list">
-          {reviews.slice(0,displayCount).map((review) => (
+          {reviews.map((review) => (
             <div key={review.id} className="card mb-3">
               <div className="card-body">
                 <div className="d-flex justify-content-between align-items-center mb-2">
@@ -185,10 +207,10 @@ function RecipeDetail() {
           ))}
         </div>
         {/* Show More Reviews Button */}
-        {reviews.length > displayCount && (
+        {hasMore && (
           <div className="text-center mt-4">
-            <button onClick={handleShowMore} className="btn btn-primary">
-              Show More
+            <button onClick={handleLoadMore} className="btn btn-primary" disabled={loading}>
+              {loading ? 'Loading...' : 'Show More'}
             </button>
           </div>
         )}

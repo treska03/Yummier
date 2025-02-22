@@ -5,9 +5,9 @@ const reviewService = {
     // Reviews section
 
     // Get all reviews for a specific review
-    getReviews: async (recipeId: number) => {
+    getReviews: async (recipeId: number, pageNumber: number) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/${recipeId}/reviews`);
+            const response = await fetch(`${API_BASE_URL}/${recipeId}/reviews?page=${pageNumber}`);
             if (!response.ok) {
                 throw new Error(`Failed to fetch reviews for recipe ${recipeId}`);
             }

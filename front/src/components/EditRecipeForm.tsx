@@ -1,67 +1,101 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import recipeService from '../service/recipeService'
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import recipeService from '../service/recipeService';
 
 
-function AddRecipe() {
-  const navigate = useNavigate()
-  const [recipe, setRecipe] = useState({
+interface Recipe {
+  title: string;
+  description: string;
+  timeNeeded: number;
+  difficulty: string;
+  category: string;
+  ingredients: string[];
+  instructions: string[];
+}
+
+function EditRecipe() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const [recipe, setRecipe] = useState<Recipe>({
     title: '',
     description: '',
-    timeNeeded: '',
+    timeNeeded: 0,
     difficulty: 'EASY',
     category: 'BREAKFAST',
     ingredients: [''],
     instructions: ['']
-  })
+  });
+
+  const [originalRecipe, setOriginalRecipe] = useState<Recipe | null>(null);
+
+  useEffect(() => {
+    async function fetchRecipe() {
+      try {
+        const fetchedRecipe: Recipe = await recipeService.getById(id);
+        setRecipe({
+          title: fetchedRecipe.title,
+          description: fetchedRecipe.description,
+          timeNeeded: fetchedRecipe.timeNeeded,
+          difficulty: fetchedRecipe.difficulty,
+          category: fetchedRecipe.category,
+          ingredients: fetchedRecipe.ingredients.length ? fetchedRecipe.ingredients : [''],
+          instructions: fetchedRecipe.instructions.length ? fetchedRecipe.instructions : ['']
+        });
+        setOriginalRecipe(fetchedRecipe);
+      } catch (error) {
+        console.error('Error fetching recipe:', error);
+      }
+    }
+    fetchRecipe();
+  }, [id]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setRecipe(prev => ({
       ...prev,
       [name]: value
-    }))
-  }
+    }));
+  };
 
-  const handleArrayChange = (index, field, value) => {
+  const handleArrayChange = (index: number, field: 'ingredients' | 'instructions', value: string) => {
     setRecipe(prev => ({
       ...prev,
-      [field]: prev[field].map((item, i) => i === index ? value : item)
-    }))
-  }
+      [field]: prev[field].map((item, i) => (i === index ? value : item))
+    }));
+  };
 
-  const addArrayField = (field) => {
+  const addArrayField = (field: 'ingredients' | 'instructions') => {
     setRecipe(prev => ({
       ...prev,
       [field]: [...prev[field], '']
-    }))
-  }
+    }));
+  };
 
-  const removeArrayField = (field, index) => {
+  const removeArrayField = (field: 'ingredients' | 'instructions', index: number) => {
     setRecipe(prev => ({
       ...prev,
       [field]: prev[field].filter((_, i) => i !== index)
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-        recipe.difficulty = recipe.difficulty.toUpperCase();
-        recipe.category = recipe.category.toUpperCase();
+      const updatedRecipe: Recipe = {
+        ...recipe,
+      };
 
-        const addedRecipe = await recipeService.addRecipe(recipe);
-        console.log('Recipe added:', addedRecipe);
-        navigate('/recipes')
-        console.log('Recipe added', recipe )
+      await recipeService.editRecipe(id, updatedRecipe);
+      navigate('/recipes');
     } catch (error) {
-        console.error('Error adding recipe:', error);
+      console.error('Error updating recipe:', error);
     }
-  }
+  };
 
   return (
     <div className="recipe-form p-4">
-      <h2 className="text-center mb-4">Add New Recipe</h2>
+      <h2 className="text-center mb-4">Edit Recipe</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Recipe Name</label>
@@ -71,6 +105,7 @@ function AddRecipe() {
             name="title"
             value={recipe.title}
             onChange={handleChange}
+            placeholder={originalRecipe?.title || ''}
             required
           />
         </div>
@@ -82,6 +117,7 @@ function AddRecipe() {
             name="description"
             value={recipe.description}
             onChange={handleChange}
+            placeholder={originalRecipe?.description || ''}
             required
           />
         </div>
@@ -97,6 +133,7 @@ function AddRecipe() {
               max="213769"
               value={recipe.timeNeeded}
               onChange={handleChange}
+              placeholder={originalRecipe?.timeNeeded.toString() || ''}
               required
             />
           </div>
@@ -108,9 +145,9 @@ function AddRecipe() {
               value={recipe.difficulty}
               onChange={handleChange}
             >
-              <option>Easy</option>
-              <option>Medium</option>
-              <option>Hard</option>
+              <option value="EASY">Easy</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="HARD">Hard</option>
             </select>
           </div>
           <div className="col">
@@ -121,10 +158,10 @@ function AddRecipe() {
               value={recipe.category}
               onChange={handleChange}
             >
-              <option>Breakfast</option>
-              <option>Lunch</option>
-              <option>Snack</option>
-              <option>Dinner</option>
+              <option value="BREAKFAST">Breakfast</option>
+              <option value="LUNCH">Lunch</option>
+              <option value="SNACK">Snack</option>
+              <option value="DINNER">Dinner</option>
             </select>
           </div>
         </div>
@@ -138,6 +175,7 @@ function AddRecipe() {
                 className="form-control"
                 value={ingredient}
                 onChange={(e) => handleArrayChange(index, 'ingredients', e.target.value)}
+                placeholder={originalRecipe?.ingredients[index] || ''}
                 required
               />
               <button
@@ -162,10 +200,7 @@ function AddRecipe() {
           <label className="form-label">Instructions</label>
           {recipe.instructions.map((instruction, index) => (
             <div key={index} className="input-group mb-2">
-              <button
-                type="button"
-                className="btn btn-outline-dark instruction-number"
-              >
+              <button type="button" className="btn btn-outline-dark instruction-number">
                 {index + 1}.
               </button>
               <input
@@ -173,6 +208,7 @@ function AddRecipe() {
                 className="form-control"
                 value={instruction}
                 onChange={(e) => handleArrayChange(index, 'instructions', e.target.value)}
+                placeholder={originalRecipe?.instructions[index] || ''}
                 required
               />
               <button
@@ -195,12 +231,12 @@ function AddRecipe() {
 
         <div className="text-center">
           <button type="submit" className="btn btn-primary">
-            Add Recipe
+            Edit Recipe
           </button>
         </div>
       </form>
     </div>
-  )
+  );
 }
 
-export default AddRecipe
+export default EditRecipe;
