@@ -17,4 +17,4 @@ WORKDIR /app
 COPY --from=builder /app/build/libs/backend.jar .
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "backend.jar"]
+ENTRYPOINT ["java", "-jar", "backend.jar", "--spring.profiles.active=local"]
